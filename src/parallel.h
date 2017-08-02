@@ -31,12 +31,18 @@ class Parallel {
   static int get_id() { return Parallel::get_instance().id; }
 
   static bool is_master() { return Parallel::get_instance().id == 0; }
+
+  static std::string get_host() { return Parallel::get_instance().env->processor_name(); }
 };
 #else
 // Non-MPI stub for debugging and profiling.
 class Parallel {
  public:
   static bool is_master() { return true; }
+
+  static int get_id() { return 0; }
+
+  static std::string get_host() { return "localhost"; }
 };
 #endif
 
