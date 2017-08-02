@@ -2,3 +2,4 @@ hci
 hci_test
 
 build/
+.vscode/
