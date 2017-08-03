@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
   if (Parallel::is_master()) {
     Config::print();
   }
+  Parallel::barrier();
 
   const std::string& type = Config::get<std::string>("type");
   if (type == "heg") {

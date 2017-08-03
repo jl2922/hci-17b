@@ -33,6 +33,11 @@ class Parallel {
   static bool is_master() { return Parallel::get_instance().id == 0; }
 
   static std::string get_host() { return Parallel::get_instance().env->processor_name(); }
+
+  static void barrier() {
+    fflush(stdout);
+    Parallel::get_instance().world.barrier();
+  }
 };
 #else
 // Non-MPI stub for debugging and profiling.
@@ -43,6 +48,8 @@ class Parallel {
   static int get_id() { return 0; }
 
   static std::string get_host() { return "localhost"; }
+
+  static void barrier() { return; }
 };
 #endif
 
