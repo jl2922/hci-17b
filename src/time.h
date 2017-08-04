@@ -1,8 +1,8 @@
 #ifndef TIME_H_
 #define TIME_H_
 
-#include "libs.h"
 #include "parallel.h"
+#include "std.h"
 
 class Time {
  public:
@@ -10,7 +10,6 @@ class Time {
   static void init() {
     if (!Parallel::is_master()) return;
     Time::get_instance().init_time = std::chrono::high_resolution_clock::now();
-    Time::get_instance().just_ended = true;
   }
 
   static void start(const std::string& event) {
@@ -20,12 +19,9 @@ class Time {
       const auto& init_time = Time::get_instance().init_time;
       auto& start_times = Time::get_instance().start_times;
       start_times.push_back(std::make_pair(event, now));
-      if (Time::get_instance().just_ended) {
-        printf("\n");
-        Time::get_instance().just_ended = false;
-      }
+      printf("\n");
       printf("START ");
-      for (std::size_t i = 0; i < start_times.size() - 1; i++) {
+      for (size_t i = 0; i < start_times.size() - 1; i++) {
         printf("%s >> ", start_times[i].first.c_str());
       }
       printf("%s [0.0/%.3f]\n", event.c_str(), get_duration(init_time, now));
@@ -40,7 +36,7 @@ class Time {
       const auto& init_time = Time::get_instance().init_time;
       auto& start_times = Time::get_instance().start_times;
       printf("--END ");
-      for (std::size_t i = 0; i < start_times.size() - 1; i++) {
+      for (size_t i = 0; i < start_times.size() - 1; i++) {
         printf("%s >> ", start_times[i].first.c_str());
       }
       const auto& event_name = start_times.back().first;
@@ -51,7 +47,27 @@ class Time {
           get_duration(init_time, now),
           get_duration(event_start_time, now));
       start_times.pop_back();
-      Time::get_instance().just_ended = true;
+    }
+    Parallel::barrier();
+  }
+
+  static void checkpoint(const std::string& msg) {
+    Parallel::barrier();
+    if (Parallel::is_master()) {
+      const auto& now = std::chrono::high_resolution_clock::now();
+      const auto& init_time = Time::get_instance().init_time;
+      auto& start_times = Time::get_instance().start_times;
+      // printf("TIME ");
+      // for (size_t i = 0; i < start_times.size() - 1; i++) {
+      //   printf("%s >> ", start_times[i].first.c_str());
+      // }
+      // const auto& event_name = start_times.back().first;
+      const auto& event_start_time = start_times.back().second;
+      printf(
+          "CHECKPOINT %s [%.3f/%.3f]\n",
+          msg.c_str(),
+          get_duration(init_time, now),
+          get_duration(event_start_time, now));
     }
     Parallel::barrier();
   }
@@ -59,7 +75,6 @@ class Time {
  private:
   std::chrono::high_resolution_clock::time_point init_time;
   std::vector<std::pair<std::string, std::chrono::high_resolution_clock::time_point>> start_times;
-  bool just_ended;
 
   // Singleton pattern.
   static Time& get_instance() {

@@ -4,7 +4,7 @@
 #ifndef SERIAL
 #include <boost/mpi.hpp>
 #endif
-#include "libs.h"
+#include "std.h"
 
 #ifndef SERIAL
 class Parallel {

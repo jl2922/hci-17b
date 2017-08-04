@@ -3,8 +3,8 @@
 #endif
 #include "config.h"
 #include "heg_solver/heg_solver.h"
-#include "libs.h"
 #include "parallel.h"
+#include "std.h"
 #include "time.h"
 
 int main(int argc, char** argv) {
