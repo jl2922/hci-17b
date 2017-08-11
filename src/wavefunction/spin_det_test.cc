@@ -1,5 +1,6 @@
 #include "spin_det.h"
 #include "gtest/gtest.h"
+#include "types.h"
 
 TEST(SpinDetTest, SetAndGetOrbitals) {
   SpinDet spin_det;
@@ -25,9 +26,9 @@ TEST(SpinDetTest, EncodeAndDecodeVariable) {
   spin_det1.set_orb(2, true);
   spin_det1.set_orb(3, true);
   SpinDet spin_det2;
-  std::vector<uint16_t> code = spin_det1.encode(SpinDet::EncodeScheme::VARIABLE);
+  Orbitals code = spin_det1.encode(SpinDet::EncodeScheme::VARIABLE);
   spin_det2.decode(code, SpinDet::EncodeScheme::VARIABLE);
-  std::vector<uint16_t> expected_code({2, 0, 1, 2, 3});
+  Orbitals expected_code({2, 0, 1, 2, 3});
   for (size_t i = 0; i < expected_code.size(); i++) {
     EXPECT_EQ(code[i], expected_code[i]);
   }
@@ -36,7 +37,7 @@ TEST(SpinDetTest, EncodeAndDecodeVariable) {
   spin_det1.set_orb(1, true);
   code = spin_det1.encode(SpinDet::EncodeScheme::VARIABLE);
   spin_det2.decode(code, SpinDet::EncodeScheme::VARIABLE);
-  expected_code = std::vector<uint16_t>({3, 0, 3});
+  expected_code = Orbitals({3, 0, 3});
   for (size_t i = 0; i < expected_code.size(); i++) {
     EXPECT_EQ(code[i], expected_code[i]);
   }
@@ -45,7 +46,7 @@ TEST(SpinDetTest, EncodeAndDecodeVariable) {
   spin_det1.set_orb(0, true);
   code = spin_det1.encode(SpinDet::EncodeScheme::VARIABLE);
   spin_det2.decode(code, SpinDet::EncodeScheme::VARIABLE);
-  expected_code = std::vector<uint16_t>({4});
+  expected_code = Orbitals({4});
   for (size_t i = 0; i < expected_code.size(); i++) {
     EXPECT_EQ(code[i], expected_code[i]);
   }

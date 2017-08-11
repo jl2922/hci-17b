@@ -1,6 +1,6 @@
 #include "spin_det.h"
 
-void SpinDet::set_orb(const uint16_t orb_id, const bool occ) {
+void SpinDet::set_orb(const Orbital orb_id, const bool occ) {
   if (elecs.empty()) {
     elecs.push_back(orb_id);
   } else if (orb_id < elecs.front()) {
@@ -51,11 +51,11 @@ void SpinDet::from_eor(const SpinDet& lhs, const SpinDet& rhs) {
   }
 }
 
-const std::vector<uint16_t> SpinDet::encode_variable() const {
-  std::vector<uint16_t> code;
+const Orbitals SpinDet::encode_variable() const {
+  Orbitals code;
   const size_t n = get_n_elecs();
   code.push_back(n);
-  uint16_t level = 0;
+  Orbital level = 0;
   for (const auto orb : elecs) {
     while (level < n && level < orb) {
       code.push_back(level);
@@ -67,11 +67,11 @@ const std::vector<uint16_t> SpinDet::encode_variable() const {
   return code;
 }
 
-void SpinDet::decode_variable(const std::vector<uint16_t>& code) {
+void SpinDet::decode_variable(const Orbitals& code) {
   const std::size_t n = code[0];
   elecs.clear();
   elecs.reserve(n);
-  uint16_t level = 0;
+  Orbital level = 0;
   for (size_t i = 1; i < code.size(); i++) {
     const auto orb = code[i];
     while (level < n && level < orb) {
@@ -88,6 +88,8 @@ void SpinDet::decode_variable(const std::vector<uint16_t>& code) {
 }
 
 bool operator==(const SpinDet& lhs, const SpinDet& rhs) { return lhs.elecs == rhs.elecs; }
+
+bool operator!=(const SpinDet& lhs, const SpinDet& rhs) { return lhs.elecs != rhs.elecs; }
 
 std::ostream& operator<<(std::ostream& os, const SpinDet& spin_det) {
   for (const auto orbital : spin_det.elecs) os << orbital << " ";

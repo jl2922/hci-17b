@@ -30,6 +30,8 @@ class Parallel {
 
   static int get_id() { return Parallel::get_instance().id; }
 
+  static int get_n() { return Parallel::get_instance().n; }
+
   static bool is_master() { return Parallel::get_instance().id == 0; }
 
   static std::string get_host() { return Parallel::get_instance().env->processor_name(); }
@@ -37,6 +39,23 @@ class Parallel {
   static void barrier() {
     fflush(stdout);
     Parallel::get_instance().world.barrier();
+  }
+
+  template <class T>
+  static void reduce_to_sum(T& t) {
+    T t_local = t;
+    boost::mpi::all_reduce(Parallel::get_instance().world, t_local, t, std::plus<T>());
+  }
+
+  template <class T>
+  static void reduce_to_sum(std::vector<T>& t) {
+#ifdef __INTEL_COMPILER
+    for (std::size_t i = 0; i < n; i++) Parallel::reduce_to_sum(t[i]);
+#else
+    std::vector<T> t_local = t;
+    boost::mpi::reduce(Parallel::get_instance().world, t_local, t, std::plus<T>(), 0);
+    boost::mpi::broadcast(Parallel::get_instance().world, t, 0);
+#endif
   }
 };
 #else
@@ -47,9 +66,14 @@ class Parallel {
 
   static int get_id() { return 0; }
 
+  static int get_n() { return 1; }
+
   static std::string get_host() { return "localhost"; }
 
   static void barrier() { return; }
+
+  template <class T>
+  static void reduce_to_sum(T& t) {}
 };
 #endif
 

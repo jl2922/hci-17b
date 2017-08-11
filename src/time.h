@@ -44,8 +44,8 @@ class Time {
       printf(
           "%s [%.3f/%.3f]\n",
           event_name.c_str(),
-          get_duration(init_time, now),
-          get_duration(event_start_time, now));
+          get_duration(event_start_time, now),
+          get_duration(init_time, now));
       start_times.pop_back();
     }
     Parallel::barrier();

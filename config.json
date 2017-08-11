@@ -4,20 +4,14 @@
   "n_dn": 7,
   "r_s": 0.5,
   "rcut_vars": [
-    5.0,
-    5.0
+    2.5,
+    3.0
   ],
   "eps_vars": [
     0.001
   ],
-  "eps_ham_vars": [
-    0.0001
-  ],
-  "rcut_pts": [
-    2.5,
-    3.0
-  ],
-  "eps_pts": [
-    0.00001
-  ]
+  "rcut_pt_ratio": 1.26,
+  "eps_var_ham_old_ratio": 0.01,
+  "eps_var_ham_new_ratio": 1.0,
+  "eps_pt_ratio": 0.01
 }

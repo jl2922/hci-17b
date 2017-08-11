@@ -1,5 +1,6 @@
 hci
 hci_test
+*.log
 
 build/
 .vscode/

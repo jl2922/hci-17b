@@ -40,6 +40,12 @@ class HEGSolver : public Solver {
   void generate_hci_queue(const double);
 
   double hamiltonian(const Det&, const Det&) const override;
+
+  int get_gamma_exp(const SpinDet&, const std::vector<uint16_t>&) const;
+
+  std::list<Det> find_connected_dets(const Det&, const double eps) const override;
+
+  std::list<OrbitalPair> get_pq_pairs(const Det&, const int) const;
 };
 
 #endif

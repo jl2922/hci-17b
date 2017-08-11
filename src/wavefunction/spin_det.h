@@ -8,9 +8,9 @@ class SpinDet {
  public:
   enum EncodeScheme { FIXED, VARIABLE };
 
-  void set_orb(const uint16_t orb_id, const bool occ);
+  void set_orb(const Orbital orb_id, const bool occ);
 
-  bool get_orb(const uint16_t orb_id) const {
+  bool get_orb(const Orbital orb_id) const {
     return std::binary_search(elecs.begin(), elecs.end(), orb_id);
   }
 
@@ -18,14 +18,14 @@ class SpinDet {
 
   void from_eor(const SpinDet&, const SpinDet&);
 
-  const std::vector<uint16_t> get_elec_orbs() const { return elecs; }
+  const Orbitals get_elec_orbs() const { return elecs; }
 
-  const std::vector<uint16_t> encode(const EncodeScheme scheme = VARIABLE) const {
+  const Orbitals encode(const EncodeScheme scheme = VARIABLE) const {
     if (scheme == FIXED) return elecs;
     return encode_variable();
   }
 
-  void decode(const std::vector<uint16_t>& code, const EncodeScheme scheme = VARIABLE) {
+  void decode(const Orbitals& code, const EncodeScheme scheme = VARIABLE) {
     if (scheme == FIXED) {
       elecs = code;
     } else {
@@ -34,17 +34,23 @@ class SpinDet {
   }
 
   friend bool operator==(const SpinDet&, const SpinDet&);
+
+  friend bool operator!=(const SpinDet&, const SpinDet&);
+
   friend std::ostream& operator<<(std::ostream&, const SpinDet&);
 
  private:
-  std::vector<uint16_t> elecs;
+  Orbitals elecs;
 
-  const std::vector<uint16_t> encode_variable() const;
+  const Orbitals encode_variable() const;
 
-  void decode_variable(const std::vector<uint16_t>& code);
+  void decode_variable(const Orbitals& code);
 };
 
 bool operator==(const SpinDet&, const SpinDet&);
+
+bool operator!=(const SpinDet&, const SpinDet&);
+
 std::ostream& operator<<(std::ostream&, const SpinDet&);
 
 #endif
