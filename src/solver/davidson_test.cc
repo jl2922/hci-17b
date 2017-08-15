@@ -16,7 +16,7 @@ class HilbertSystem {
     std::vector<double> Hv(n, 0.0);
     for (int i = 0; i < n; i++) {
       Hv[i] += get_hamiltonian(i, i) * v[i];
-      for (int j = i + 1; j < n; j++) {
+      for (int j = i + 1; j < std::min(n, i + 1000); j++) {
         double h_ij = get_hamiltonian(i, j);
         Hv[i] += h_ij * v[j];
         Hv[j] += h_ij * v[i];

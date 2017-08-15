@@ -93,7 +93,6 @@ void Solver::variation(
     iteration++;
 
     Time::end();
-    break;
   }
 
   energy_var = energy_var_new;
@@ -163,6 +162,8 @@ std::vector<double> Solver::apply_hamiltonian(const std::vector<double>& vec) {
     const Det& det_i = dets[i];
     const uint32_t code_up = ex.lookup_id(det_i.up.encode());
     const uint32_t code_dn = ex.lookup_id(det_i.dn.encode());
+    const double H_ii = hamiltonian(det_i, det_i);
+    res[i] += H_ii * vec[i];
     for (const uint32_t code_up_conn : ex.find(code_up, true)) {
       if (dets_code_set.count(std::make_pair(code_up_conn, code_dn))) {
         const size_t j = dets_code_set[std::make_pair(code_up_conn, code_dn)];
@@ -170,9 +171,7 @@ std::vector<double> Solver::apply_hamiltonian(const std::vector<double>& vec) {
         const Det& det_j = dets[j];
         const double H_ij = hamiltonian(det_i, det_j);
         res[i] += H_ij * vec[j];
-        if (j != i) {
-          res[j] += H_ij * vec[i];
-        }
+        res[j] += H_ij * vec[i];
       }
     }
     for (const uint32_t code_dn_conn : ex.find(code_dn, true)) {
@@ -182,9 +181,7 @@ std::vector<double> Solver::apply_hamiltonian(const std::vector<double>& vec) {
         const Det& det_j = dets[j];
         const double H_ij = hamiltonian(det_i, det_j);
         res[i] += H_ij * vec[j];
-        if (j != i) {
-          res[j] += H_ij * vec[i];
-        }
+        res[j] += H_ij * vec[i];
       }
     }
     for (const uint32_t code_up_conn : ex.find(code_up, false)) {
@@ -195,9 +192,7 @@ std::vector<double> Solver::apply_hamiltonian(const std::vector<double>& vec) {
           const Det& det_j = dets[j];
           const double H_ij = hamiltonian(det_i, det_j);
           res[i] += H_ij * vec[j];
-          if (j != i) {
-            res[j] += H_ij * vec[i];
-          }
+          res[j] += H_ij * vec[i];
         }
       }
     }

@@ -1,6 +1,8 @@
 hci
 hci_test
 *.log
+config.json
 
 build/
 .vscode/
+*_profile/

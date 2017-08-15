@@ -33,9 +33,7 @@ void HEGSolver::solve() {
       const double eps_var = eps_vars[j];
       const double eps_var_ham_old = eps_var * Config::get<double>("eps_var_ham_old_ratio");
       const double eps_var_ham_new = eps_var * Config::get<double>("eps_var_ham_new_ratio");
-      std::string eps_var_event =
-          str(boost::format("eps_var (ham_old / ham_new): %#.4g (%#.4g / %#.4g)") % eps_var %
-              eps_var_ham_old % eps_var_ham_new);
+      std::string eps_var_event = str(boost::format("eps_var: %#.4g") % eps_var);
       Time::start(eps_var_event);
       // this->eps_var = eps_var;
       // if (!load_variation_result()) {
