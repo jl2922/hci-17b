@@ -14,6 +14,7 @@ class Solver {
   Wavefunction wf;
   double energy_hf;
   double energy_var;
+  double energy_pt;
   ExcitationStore ex;
 
   virtual void solve() {}
@@ -26,9 +27,7 @@ class Solver {
 
   virtual std::list<Det> find_connected_dets(const Det&, const double eps) const = 0;
 
-  void update_helper_list(const Det&, const Det&);
-
-  double diagonalize(std::size_t);
+  double diagonalize(const std::size_t, const double, const double);
 
   std::vector<double> apply_hamiltonian(const std::vector<double>&);
 };

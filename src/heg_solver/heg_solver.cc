@@ -35,7 +35,7 @@ void HEGSolver::solve() {
       const double eps_var_ham_new = eps_var * Config::get<double>("eps_var_ham_new_ratio");
       std::string eps_var_event = str(boost::format("eps_var: %#.4g") % eps_var);
       Time::start(eps_var_event);
-      // this->eps_var = eps_var;
+
       // if (!load_variation_result()) {
       variation(eps_var, eps_var_ham_old, eps_var_ham_new);
       //   save_variation_result();
