@@ -57,14 +57,9 @@ class Time {
       const auto& now = std::chrono::high_resolution_clock::now();
       const auto& init_time = Time::get_instance().init_time;
       auto& start_times = Time::get_instance().start_times;
-      // printf("TIME ");
-      // for (size_t i = 0; i < start_times.size() - 1; i++) {
-      //   printf("%s >> ", start_times[i].first.c_str());
-      // }
-      // const auto& event_name = start_times.back().first;
       const auto& event_start_time = start_times.back().second;
       printf(
-          "CHECKPOINT %s [%.3f/%.3f]\n",
+          " -CHECKPOINT %s [%.3f/%.3f]\n",
           msg.c_str(),
           get_duration(init_time, now),
           get_duration(event_start_time, now));
