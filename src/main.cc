@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     HEGSolver::run();
   } else {
     throw std::invalid_argument("System type not supported");
-  }
+  
 
   return 0;
 }
