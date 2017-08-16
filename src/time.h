@@ -59,7 +59,7 @@ class Time {
       auto& start_times = Time::get_instance().start_times;
       const auto& event_start_time = start_times.back().second;
       printf(
-          " -CHECKPOINT %s [%.3f/%.3f]\n",
+          " -CHK %s [%.3f/%.3f]\n",
           msg.c_str(),
           get_duration(init_time, now),
           get_duration(event_start_time, now));
