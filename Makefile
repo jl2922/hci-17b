@@ -8,11 +8,11 @@ EXE := hci
 TEST_EXE := hci_test
 
 # Host specific configurations.
-HOSTNAME := $(shell hostname -a)
+HOSTNAME := $(shell hostname)
 ifneq ($(findstring bridges, $(HOSTNAME)),)
 include Makefile.config.bridges
 endif
-ifeq (dft.physics.cornell.edu, $(HOSTNAME))
+ifneq ($(findstring dft, $(HOSTNAME)),)
 include Makefile.config.dft
 endif
 
