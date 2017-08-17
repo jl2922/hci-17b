@@ -1,7 +1,11 @@
 hci
 hci_test
-*.log
+submit.sh
 config.json
+
+*.log
+*.txt
+*.out
 
 build/
 .vscode/
