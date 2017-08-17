@@ -143,8 +143,10 @@ std::vector<double> Solver::apply_hamiltonian(
       }
     }
   }
+
   Time::checkpoint("hamiltonian applied locally");
-  for (std::size_t i = 0; i < n; i++) Parallel::reduce_to_sum(res[i]);
-  Time::checkpoint("hamiltonian applied");
+  Parallel::reduce_to_sum(res);
+  Time::checkpoint("vector reduced");
+
   return res;
 }

@@ -7,6 +7,17 @@
 #include "std.h"
 
 #ifndef SERIAL
+
+template <class T>
+class vector_plus : public std::binary_function<std::vector<T>, std::vector<T>, std::vector<T>> {
+ public:
+  std::vector<T> operator()(const std::vector<T>& lhs, const std::vector<T>& rhs) const {
+    std::vector<T> v(lhs.size());
+    std::transform(lhs.begin(), lhs.end(), rhs.begin(), v.begin(), std::plus<T>());
+    return (v);
+  }
+};
+
 class Parallel {
  private:
   int id;
@@ -50,10 +61,10 @@ class Parallel {
   template <class T>
   static void reduce_to_sum(std::vector<T>& t) {
     std::vector<T> t_local = t;
-    boost::mpi::reduce(Parallel::get_instance().world, t_local, t, std::plus<T>(), 0);
-    boost::mpi::broadcast(Parallel::get_instance().world, t, 0);
+    boost::mpi::all_reduce(Parallel::get_instance().world, t_local, t, vector_plus<T>());
   }
 };
+
 #else
 // Non-MPI stub for debugging and profiling.
 class Parallel {
