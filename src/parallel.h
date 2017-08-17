@@ -26,8 +26,8 @@ class Parallel {
   boost::mpi::communicator world;
 
   Parallel() {
-    id = this->world.rank();
-    n = this->world.size();
+    id = world.rank();
+    n = world.size();
   }
 
   // Singleton pattern boilerplate.
