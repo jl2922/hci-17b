@@ -49,13 +49,9 @@ class Parallel {
 
   template <class T>
   static void reduce_to_sum(std::vector<T>& t) {
-#ifdef __INTEL_COMPILER
-    for (std::size_t i = 0; i < n; i++) Parallel::reduce_to_sum(t[i]);
-#else
     std::vector<T> t_local = t;
     boost::mpi::reduce(Parallel::get_instance().world, t_local, t, std::plus<T>(), 0);
     boost::mpi::broadcast(Parallel::get_instance().world, t, 0);
-#endif
   }
 };
 #else
