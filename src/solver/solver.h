@@ -18,7 +18,7 @@ class Solver {
   bool end_variation;
   std::unordered_map<OrbitalsPair, size_t, boost::hash<OrbitalsPair>> var_dets_id_lut;
   std::unordered_map<OrbitalsPair, double, boost::hash<OrbitalsPair>> new_dets_coef_lut;
-  ExcitationStore ex;
+  std::vector<double> eps_min_prev;
 
   virtual void solve() {}
 

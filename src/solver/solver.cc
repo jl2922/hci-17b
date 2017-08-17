@@ -95,6 +95,7 @@ double Solver::diagonalize(const double eps_var_ham_old, const double eps_var_ha
     diagonal.push_back(hamiltonian(det, det));
     initial_vector.push_back(term.coef);
   }
+  eps_min_prev.assign(wf.size(), 0.0);
 
   Time::start("Diagonalization");
   std::function<std::vector<double>(std::vector<double>)> apply_hamiltonian_func = std::bind(
@@ -138,19 +139,23 @@ std::vector<double> Solver::apply_hamiltonian(
     const bool is_old_det = i < n_old_dets;
     const double eps_var_ham = is_old_det ? eps_var_ham_old : eps_var_ham_new;
     const double abs_coef = is_old_det ? coefs[i] : new_dets_coef_lut[det_i_code];
-    const auto& connected_dets = find_connected_dets(det_i, eps_var_ham / abs_coef);
+    const double eps_cur = std::max(eps_var_ham / abs_coef, eps_min_prev[i] * 0.1);
+    double eps_cur_max = std::numeric_limits<double>::max();
+    const auto& connected_dets = find_connected_dets(det_i, eps_cur);
     for (const auto& det_j : connected_dets) {
       const auto& det_j_code = det_j.encode();
       if (var_dets_id_lut.count(det_j_code)) {
         const size_t j = var_dets_id_lut.at(det_j_code);
         if (j < i) continue;
         const double H_ij = hamiltonian(det_i, det_j);
+        eps_cur_max = std::min(eps_cur_max, fabs(H_ij));
         res[i] += H_ij * vec[j];
         if (j != i) {
           res[j] += H_ij * vec[i];
         }
       }
     }
+    eps_min_prev[i] = eps_cur_max;
   }
 
   Time::checkpoint("hamiltonian applied locally");
