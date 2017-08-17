@@ -131,7 +131,7 @@ std::vector<double> Solver::apply_hamiltonian(
   size_t proc_id = Parallel::get_id();
   size_t n_procs = Parallel::get_n();
 
-#pragma omp parallel for reduction(vec_double_plus : res)
+#pragma omp parallel for reduction(vec_double_plus : res) schedule(guided, 1)
   for (size_t i = proc_id; i < n; i += n_procs) {
     const Det& det_i = dets[i];
     const auto& det_i_code = det_i.encode();
