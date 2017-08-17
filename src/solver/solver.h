@@ -15,6 +15,9 @@ class Solver {
   double energy_hf;
   double energy_var;
   double energy_pt;
+  bool end_variation;
+  std::unordered_map<OrbitalsPair, size_t, boost::hash<OrbitalsPair>> var_dets_id_lut;
+  std::unordered_map<OrbitalsPair, double, boost::hash<OrbitalsPair>> new_dets_coef_lut;
   ExcitationStore ex;
 
   virtual void solve() {}
@@ -27,9 +30,9 @@ class Solver {
 
   virtual std::list<Det> find_connected_dets(const Det&, const double eps) const = 0;
 
-  double diagonalize(const std::size_t, const double, const double);
+  double diagonalize(const double, const double);
 
-  std::vector<double> apply_hamiltonian(const std::vector<double>&);
+  std::vector<double> apply_hamiltonian(const std::vector<double>&, const double, const double);
 };
 
 #endif

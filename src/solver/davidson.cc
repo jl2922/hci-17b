@@ -1,13 +1,13 @@
 #include "davidson.h"
 
-void Davidson::diagonalize(const std::vector<double>& initial_vector, std::size_t max_iterations) {
-  const double TOLERANCE = 2.0e-7;
+int Davidson::diagonalize(const std::vector<double>& initial_vector, std::size_t max_iterations) {
+  const double TOLERANCE = 1.0e-7;
 
   if (n == 1) {
     lowest_eigenvalue = diagonal[0];
     lowest_eigenvector = std::vector<double>(1, 1.0);
     diagonalized = true;
-    return;
+    return 0;
   }
 
   const std::size_t iterations = std::min(n, max_iterations);
@@ -51,7 +51,7 @@ void Davidson::diagonalize(const std::vector<double>& initial_vector, std::size_
 
   residual_norm = 1.0;  // So at least one iteration is done.
   std::size_t n_iter = std::min(n, iterations);
-  int n_diagonalize = 1;  // For print.
+  int n_diagonalize = 1;
 
   for (std::size_t it = 1; it < n_iter; it++) {
     // Compute residual.
@@ -116,4 +116,6 @@ void Davidson::diagonalize(const std::vector<double>& initial_vector, std::size_
   lowest_eigenvector.resize(n);
   for (std::size_t i = 0; i < n; i++) lowest_eigenvector[i] = w(i);
   diagonalized = true;
+
+  return n_diagonalize;
 }
