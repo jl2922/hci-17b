@@ -321,10 +321,10 @@ std::list<Det> HEGSolver::find_connected_dets(const Det& det, const double eps) 
     for (const auto& item : items) {
       if (item.second < eps) break;
       const auto& diff_pr = item.first;
-      const auto it_r = k_lut.find(diff_pr + k_points[pp]);
+      const auto& it_r = k_lut.find(diff_pr + k_points[pp]);
       if (it_r == k_lut.end()) continue;
       Orbital r = it_r->second;
-      const auto it_s = k_lut.find(k_points[pp] + k_points[qq - qs_offset] - k_points[r]);
+      const auto& it_s = k_lut.find(k_points[pp] + k_points[qq - qs_offset] - k_points[r]);
       if (it_s == k_lut.end()) continue;
       Orbital s = it_s->second;
       if (same_spin && s < r) continue;
