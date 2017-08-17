@@ -1,6 +1,6 @@
 # Default options.
 CXX := mpic++
-CXXFLAGS := -std=c++11 -Wall -Wextra -O3
+CXXFLAGS := -std=c++11 -Wall -Wextra -O3 -fopenmp
 LDLIBS := -lboost_mpi -lboost_serialization
 SRC_DIR := src
 OBJ_DIR := build

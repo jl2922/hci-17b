@@ -114,6 +114,12 @@ double Solver::diagonalize(const double eps_var_ham_old, const double eps_var_ha
   return energy_var;
 }
 
+#pragma omp declare reduction(      \
+    vec_double_plus : std::vector < \
+    double > : std::transform(      \
+                 omp_out            \
+                     .begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::plus < double > ())) initializer(omp_priv = omp_orig)
+
 std::vector<double> Solver::apply_hamiltonian(
     const std::vector<double>& vec, const double eps_var_ham_old, const double eps_var_ham_new) {
   size_t n = vec.size();
@@ -122,8 +128,11 @@ std::vector<double> Solver::apply_hamiltonian(
   const auto& dets = wf.get_dets();
   const auto& coefs = wf.get_coefs();
   size_t n_old_dets = n - new_dets_coef_lut.size();
+  size_t proc_id = Parallel::get_id();
+  size_t n_procs = Parallel::get_n();
 
-  for (size_t i = Parallel::get_id(); i < n; i += Parallel::get_n()) {
+#pragma omp parallel for reduction(vec_double_plus : res)
+  for (size_t i = proc_id; i < n; i += n_procs) {
     const Det& det_i = dets[i];
     const auto& det_i_code = det_i.encode();
     const bool is_old_det = i < n_old_dets;
